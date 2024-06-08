@@ -7,6 +7,7 @@ import com.sparta.newsfeed.dto.WithdrawalRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.security.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -107,5 +108,8 @@ public class UserService {
         }
         userRepository.save(user);
     }
-    
+
+    public void logout(UserDetailsImpl userDetails) {
+
+    }
 }

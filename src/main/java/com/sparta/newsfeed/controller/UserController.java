@@ -25,7 +25,7 @@ public class UserController {
     private final UserService userService;
 
     //회원가입
-    @PostMapping("/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<User> signup(SignupRequestDto requestDto) {
         userService.signup(requestDto);
         return ResponseEntity.ok().build();
@@ -50,6 +50,10 @@ public class UserController {
     public void withdrawal(@RequestBody WithdrawalRequestDto requestDto) {
         userService.withdrawal(requestDto);
     }
-
+    @PostMapping("/logout")
+    @ResponseBody
+    public void logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(userDetails);
+    }
 
 }
