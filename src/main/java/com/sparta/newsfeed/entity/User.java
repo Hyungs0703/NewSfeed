@@ -1,10 +1,11 @@
 package com.sparta.newsfeed.entity;
 
+import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 
@@ -13,25 +14,32 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
-
     private String password;
-
+    private String name;
+    @Email
     private String email;
+    private String introduce;
     private UserRoleEnum role;
+    private String token;
+    private LocalDateTime lastLogin;
 
-    public User(String username, String password, String email, UserRoleEnum role) {
+
+    public User(String username, String password, String name, String email, String introduce, UserRoleEnum role, String token) {
         this.username = username;
         this.password = password;
+        this.name = name;
         this.email = email;
+        this.introduce = introduce;
         this.role = role;
-
+        this.token = token;
+        this.lastLogin = LocalDateTime.now();
     }
 
 }

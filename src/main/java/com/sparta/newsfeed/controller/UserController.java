@@ -2,24 +2,19 @@ package com.sparta.newsfeed.controller;
 
 import com.sparta.newsfeed.dto.LoginRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
+import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
+import com.sparta.newsfeed.dto.WithdrawalRequestDto;
 import com.sparta.newsfeed.entity.User;
-import com.sparta.newsfeed.entity.UserInfoDto;
-import com.sparta.newsfeed.entity.UserRoleEnum;
-import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Controller
@@ -28,9 +23,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
-
+    //회원가입
     @PostMapping("/user/signup")
     public ResponseEntity<User> signup(SignupRequestDto requestDto) {
         userService.signup(requestDto);
@@ -40,12 +34,22 @@ public class UserController {
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
     @ResponseBody
-    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String username = userDetails.getUser().getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
-        boolean isAdmin = (role == UserRoleEnum.ADMIN);
-
-        return new UserInfoDto(username, isAdmin);
+    public Optional<User> getUserInfo(LoginRequestDto requestDto) {
+        return userService.getUserInfo(requestDto);
     }
+    //회원 소개 수정
+    @PutMapping("/user-info")
+    @ResponseBody
+    public ResponseEntity<String> updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto) {
+       return userService.updateUserInfo(requestDto);
+    }
+
+    //회원탈퇴
+    @PutMapping("/withdrawal")
+    @ResponseBody
+    public void withdrawal(@RequestBody WithdrawalRequestDto requestDto) {
+        userService.withdrawal(requestDto);
+    }
+
 
 }

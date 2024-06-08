@@ -1,7 +1,6 @@
 package com.sparta.newsfeed.dto;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,11 @@ import lombok.Setter;
 public class SignupRequestDto {
     private String username;
     private String password;
+    private String name;
+    @Email
     private String email;
-    private boolean admin = false;
-    private String adminToken = "";
+    private String introduce;
+    private boolean isRole = false;
+    private String role = "";
+    private String refreshToken = "";
 }
