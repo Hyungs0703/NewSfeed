@@ -1,6 +1,5 @@
 package com.sparta.newsfeed.service;
 
-import com.sparta.newsfeed.dto.LoginRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @Service

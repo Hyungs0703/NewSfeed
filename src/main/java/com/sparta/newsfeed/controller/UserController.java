@@ -30,15 +30,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-//    @GetMapping("/user/login")
-//    public String loginPage() {
-//        return "redirect:/login";
-//    }
-//
-//    @GetMapping("/user/signup")
-//    public String signupPage() {
-//        return "signup";
-//    }
 
     @PostMapping("/user/signup")
     public ResponseEntity<User> signup(SignupRequestDto requestDto) {
