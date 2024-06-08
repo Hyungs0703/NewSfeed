@@ -1,17 +1,16 @@
 package com.sparta.newsfeed.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 public class SignupRequestDto {
-
     private String username;
     private String password;
-    private String name;
     private String email;
-    private String introduce;
     private boolean admin = false;
     private String adminToken = "";
 }

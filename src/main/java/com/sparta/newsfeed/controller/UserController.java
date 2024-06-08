@@ -1,52 +1,60 @@
 package com.sparta.newsfeed.controller;
 
+import com.sparta.newsfeed.dto.LoginRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
-import com.sparta.newsfeed.dto.UpdateUserRequestDto;
 import com.sparta.newsfeed.entity.User;
+import com.sparta.newsfeed.entity.UserInfoDto;
+import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
+@Slf4j
 @Controller
-@ResponseBody
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    //회원가입
-    @PostMapping("/signup")
-    public String signup(SignupRequestDto signupRequestDto) {
-
-        System.out.println(signupRequestDto.getUsername()+ "회원가입이 완료되었습니다.");
-        userService.signup(signupRequestDto);
-
-        return "ok";
-    }
-    //회원정보 수정
-    @PutMapping("/profile")
-    public Optional<User> updateProfile(@Valid @RequestBody UpdateUserRequestDto updateUserRequestDto) throws IOException {
-       return userService.updateProfile(updateUserRequestDto);
-    }
-
-
-
-
-//    //탈퇴
-//    @PutMapping("/secession")
-//    public User secession(SecessionRequestDto secessionRequestDto) {
-//        return userService.secession(secessionRequestDto);
+//    @GetMapping("/user/login")
+//    public String loginPage() {
+//        return "redirect:/login";
+//    }
+//
+//    @GetMapping("/user/signup")
+//    public String signupPage() {
+//        return "signup";
 //    }
 
+    @PostMapping("/user/signup")
+    public ResponseEntity<User> signup(SignupRequestDto requestDto) {
+        userService.signup(requestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    // 회원 관련 정보 받기
+    @GetMapping("/user-info")
+    @ResponseBody
+    public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        String username = userDetails.getUser().getUsername();
+        UserRoleEnum role = userDetails.getUser().getRole();
+        boolean isAdmin = (role == UserRoleEnum.ADMIN);
+
+        return new UserInfoDto(username, isAdmin);
+    }
 
 }

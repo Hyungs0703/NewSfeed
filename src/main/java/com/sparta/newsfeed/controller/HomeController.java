@@ -11,21 +11,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Controller
-@ResponseBody
 public class HomeController {
-
     @GetMapping("/")
-    public String mainP() {
-
-        String name = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-        GrantedAuthority auth = iter.next();
-        String role = auth.getAuthority();
-
-        return "Main Controller : "+name + role;
+    public String home() {
+        return "ok";
     }
 }

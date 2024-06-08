@@ -1,12 +1,12 @@
 package com.sparta.newsfeed.service;
 
+import com.sparta.newsfeed.dto.LoginRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
-import com.sparta.newsfeed.dto.UpdateUserRequestDto;
 import com.sparta.newsfeed.entity.User;
+import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -17,52 +17,40 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Transactional
-    public void signup(SignupRequestDto signupRequestDto) {
+    // ADMIN_TOKEN
+    private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
-        String username = signupRequestDto.getUsername();
-        String password = bCryptPasswordEncoder.encode(signupRequestDto.getPassword());
-        String name = signupRequestDto.getName();
-        String introduce = signupRequestDto.getIntroduce();
+    public void signup(SignupRequestDto requestDto) {
+        String username = requestDto.getUsername();
+        String password = passwordEncoder.encode(requestDto.getPassword());
 
-        //사용자 아이디 중복확인
+        // 회원 중복 확인
         Optional<User> checkUsername = userRepository.findByUsername(username);
         if (checkUsername.isPresent()) {
-            throw new IllegalArgumentException("중복된 사용자 아이디가 존재합니다.");
+            throw new IllegalArgumentException("중복된 사용자가 존재합니다.");
         }
+
         // email 중복확인
-        String email = signupRequestDto.getEmail();
+        String email = requestDto.getEmail();
         Optional<User> checkEmail = userRepository.findByEmail(email);
         if (checkEmail.isPresent()) {
             throw new IllegalArgumentException("중복된 Email 입니다.");
         }
 
-        String role = "USER";
-        User data = new User(username, password, name, email, introduce, role);
-        userRepository.save(data);
-    }
-
-    @Transactional
-    public Optional<User> updateProfile(UpdateUserRequestDto updateUserRequestDto) throws IOException {
-        String username = updateUserRequestDto.getUsername();
-        String password = updateUserRequestDto.getPassword();
-        String introduce = updateUserRequestDto.getIntroduce();
-
-        Optional<User> checkUserdata = userRepository.findByUsername(username);
-
-        if (checkUserdata.isPresent()) {
-            User user = checkUserdata.get();
-            bCryptPasswordEncoder.matches(password, user.getPassword());
-            if(!bCryptPasswordEncoder.matches(password, user.getPassword())){
-                throw new IOException("해당 비밀번호는 일치하지 않습니다.");
+        // 사용자 ROLE 확인
+        UserRoleEnum role = UserRoleEnum.USER;
+        if (requestDto.isAdmin()) {
+            if (!ADMIN_TOKEN.equals(requestDto.getAdminToken())) {
+                throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
             }
-            user.setIntroduce(introduce);
-            userRepository.save(user);
-        }else {
-            throw new IllegalArgumentException("해당 사용자는 존재하지 않습니다");
+            role = UserRoleEnum.ADMIN;
         }
-        return checkUserdata;
+
+        // 사용자 등록
+        User user = new User(username, password, email, role);
+        userRepository.save(user);
     }
+
 }
