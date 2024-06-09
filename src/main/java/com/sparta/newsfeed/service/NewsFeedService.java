@@ -6,11 +6,14 @@ import com.sparta.newsfeed.entity.NewsFeed;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.repository.NewsFeedRepository;
 import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,25 +26,9 @@ public class NewsFeedService {
         NewsFeed newsFeed = newsFeedRepository.save(new NewsFeed(request, user));
         return new NewsFeedResponseDto(newsFeed);
     }
-//    //단일 게시글 조회
-//    public NewsFeedResponseDto findById(Long newsFeedId) {
-//        NewsFeed newsFeed = findNewsFeedById(newsFeedId);
-//
-//        return new NewsFeedResponseDto(newsFeed.getId(), newsFeed.getContents());
-//    }
-//
-//    private NewsFeed findNewsFeedById(Long newsFeedId) {
-//        return newsFeedRepository.findById(newsFeedId)
-//                .orElseThrow(() -> new IllegalArgumentException("NewsFeed에서 해당 ID를 찾을 수 없습니다: " + newsFeedId));
-//
-//        //인가 if 추가부분
-//    }
-//
-//    public void delete(Long newsFeedId) {
-//        newsFeedRepository.deleteById(newsFeedId);
-//    }
-//
-    public List<NewsFeedResponseDto> findAll() {
+
+    //전체 게시물 조최 : 누구든 조회 가능
+    public List<NewsFeedResponseDto> getNewsfeedList() {
         List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
         List<NewsFeedResponseDto> newsFeedResponseList = new ArrayList<>();
         for (NewsFeed newsFeed : newsFeeds) {
@@ -51,5 +38,24 @@ public class NewsFeedService {
         return newsFeedResponseList;
     }
 
+    //개별 게시물 조회 : 누구든 조회 가능
+    public NewsFeedResponseDto getNewsfeed(Long newsFeedId) {
+        NewsFeed newsFeed = findNewsFeedById(newsFeedId);
+
+        return new NewsFeedResponseDto(newsFeed);
+    }
+
+    private NewsFeed findNewsFeedById(Long newsFeedId) {
+        return newsFeedRepository.findById(newsFeedId)
+                .orElseThrow(() -> new IllegalArgumentException("NewsFeed에서 해당 ID를 찾을 수 없습니다: " + newsFeedId));
+
+        //인가 if 추가부분
+    }
+
+
+    //삭제
+    public void deleteNewsfeed(Long newsFeedId) {
+        newsFeedRepository.deleteById(newsFeedId);
+    }
 
 }

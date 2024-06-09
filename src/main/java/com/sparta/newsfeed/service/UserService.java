@@ -74,10 +74,12 @@ public class UserService {
         User user = userRepository.findByUsername(requestDto.getUsername()).get();
 
         String username = requestDto.getUsername();
-        Optional<User> checkUsername = userRepository.findByUsername(username);
+        Optional<User> checkUsername = Optional.ofNullable(userRepository.findByUsername(username).orElseThrow(() ->
+                new IllegalArgumentException("아이디는 공백일 수 없습니다..")));
 
         String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkpassword = userRepository.findByPassword(password);
+        Optional<User> checkpassword = Optional.ofNullable(userRepository.findByPassword(password).orElseThrow(() ->
+                new IllegalArgumentException("비밀번호는 공백일 수 없습니다..")));
 
         String introduce = requestDto.getIntroduce();
         if (checkUsername.isPresent() || checkpassword.isPresent()) {
@@ -93,12 +95,13 @@ public class UserService {
     @Transactional
     public void withdrawal(WithdrawalRequestDto requestDto) {
         User user = userRepository.findByUsername(requestDto.getUsername()).get();
-
         String username = requestDto.getUsername();
-        Optional<User> checkUsername = userRepository.findByUsername(username);
+        Optional<User> checkUsername = Optional.ofNullable(userRepository.findByUsername(username).orElseThrow(() ->
+                new IllegalArgumentException("아이디는 공백일 수 없습니다..")));
 
         String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkpassword = userRepository.findByPassword(password);
+        Optional<User> checkpassword = Optional.ofNullable(userRepository.findByPassword(password).orElseThrow(() ->
+                new IllegalArgumentException("비밀번호는 공백일 수 없습니다..")));
 
         if (checkUsername.isPresent() || checkpassword.isPresent()) {
             user.setToken(BLACKLIST_TOKEN);
@@ -109,7 +112,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    //회원탈퇴
     public void logout(UserDetailsImpl userDetails) {
-
     }
 }

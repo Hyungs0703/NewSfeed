@@ -5,5 +5,4 @@ import lombok.Getter;
 @Getter
 public class NewsFeedDeleteRequest {
     private String newsFeedId;
-
 }

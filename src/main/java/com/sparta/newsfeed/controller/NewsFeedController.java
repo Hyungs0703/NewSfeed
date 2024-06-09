@@ -27,23 +27,30 @@ public class NewsFeedController {
 
     //전체 게시물 조최 : 누구든 조회 가능
     @GetMapping("/newsfeeds")
-    public ResponseEntity<List<NewsFeedResponseDto>> findAll(){
-        List<NewsFeedResponseDto> response = newsFeedService.findAll();
+    public ResponseEntity<List<NewsFeedResponseDto>> getNewsfeedList(){
+        List<NewsFeedResponseDto> response = newsFeedService.getNewsfeedList();
         return ResponseEntity.ok(response);
     }
-//
-//    //개별 게시물 조회 : 누구든 조회 가능
-//    @GetMapping("/{newsFeedId}")
-//    public ResponseEntity<NewsFeedResponseDto> findByID(@PathVariable(name = "newsFeedId") Long newsFeedId) {
-//        NewsFeedResponseDto response = newsFeedService.findById(newsFeedId);
-//        return ResponseEntity.ok(response);
+
+
+    //개별 게시물 조회 : 누구든 조회 가능
+    @GetMapping("/newsfeeds/{id}")
+    public ResponseEntity<NewsFeedResponseDto> getNewsfeed(@PathVariable(name = "newsFeedId") Long newsFeedId) {
+        NewsFeedResponseDto response = newsFeedService.getNewsfeed(newsFeedId);
+        return ResponseEntity.ok(response);
+    }
+
+//    @PutMapping("/newsfeeds/{id}")
+//    public NewsFeedResponseDto updateNewsFeed () {
+//        return newsFeedService.updateNewsFeed();
 //    }
-//
-////U
-//
-//    @DeleteMapping("/{newsFeedId}")
-//    public ResponseEntity<String> deleteByID(@PathVariable(name = "newsFeedId") Long newsFeedId) {
-//        newsFeedService.delete(newsFeedId);
-//        return ResponseEntity.ok("게시글이 삭제되었습니다.");
-//    }
+
+
+    //게시물 삭제
+    @DeleteMapping("/newsfeeds/{id}")
+    public ResponseEntity<String> deleteNewsfeed(@PathVariable(name = "newsFeedId") Long newsFeedId) {
+        newsFeedService.deleteNewsfeed(newsFeedId);
+        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    }
+
 }
