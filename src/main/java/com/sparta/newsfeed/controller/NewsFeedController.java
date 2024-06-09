@@ -5,8 +5,11 @@ import com.sparta.newsfeed.dto.NewsFeedResponseDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.NewsFeedService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -22,12 +25,12 @@ public class NewsFeedController {
         return newsFeedService.createNewsFeed(request, userDetails.getUser());
     }
 
-//    //전체 게시물 조최 : 누구든 조회 가능
-//    @GetMapping
-//    public ResponseEntity<List<NewsFeedResponseDto>> findAll(){
-//        List<NewsFeedResponseDto> response = newsFeedService.findAll();
-//        return ResponseEntity.ok(response);
-//    }
+    //전체 게시물 조최 : 누구든 조회 가능
+    @GetMapping("/newsfeeds")
+    public ResponseEntity<List<NewsFeedResponseDto>> findAll(){
+        List<NewsFeedResponseDto> response = newsFeedService.findAll();
+        return ResponseEntity.ok(response);
+    }
 //
 //    //개별 게시물 조회 : 누구든 조회 가능
 //    @GetMapping("/{newsFeedId}")

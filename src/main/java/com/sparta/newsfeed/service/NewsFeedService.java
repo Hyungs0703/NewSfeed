@@ -9,6 +9,9 @@ import com.sparta.newsfeed.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class NewsFeedService {
@@ -38,15 +41,15 @@ public class NewsFeedService {
 //        newsFeedRepository.deleteById(newsFeedId);
 //    }
 //
-//    public List<NewsFeedResponseDto> findAll() {
-//        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
-//        List<NewsFeedResponseDto> newsFeedResponseList = new ArrayList<>();
-//        for (NewsFeed newsFeed : newsFeeds) {
-//            NewsFeedResponseDto response = new NewsFeedResponseDto(newsFeed.getId(), newsFeed.getContents());
-//            newsFeedResponseList.add(response);
-//        }
-//        return newsFeedResponseList;
-//    }
+    public List<NewsFeedResponseDto> findAll() {
+        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
+        List<NewsFeedResponseDto> newsFeedResponseList = new ArrayList<>();
+        for (NewsFeed newsFeed : newsFeeds) {
+            NewsFeedResponseDto response = new NewsFeedResponseDto(newsFeed);
+            newsFeedResponseList.add(response);
+        }
+        return newsFeedResponseList;
+    }
 
 
 }

@@ -19,7 +19,7 @@ import java.util.Optional;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
