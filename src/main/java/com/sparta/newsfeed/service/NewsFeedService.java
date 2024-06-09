@@ -1,7 +1,7 @@
 package com.sparta.newsfeed.service;
 
-import com.sparta.newsfeed.dto.NewsFeedCreateRequest;
-import com.sparta.newsfeed.dto.NewsFeedResponse;
+import com.sparta.newsfeed.dto.NewsFeedRequestDto;
+import com.sparta.newsfeed.dto.NewsFeedResponseDto;
 import com.sparta.newsfeed.entity.NewsFeed;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.repository.NewsFeedRepository;
@@ -15,15 +15,16 @@ public class NewsFeedService {
     private final NewsFeedRepository newsFeedRepository;
     private final UserRepository userRepository;
 
-    public NewsFeedResponse createNewsFeed(NewsFeedCreateRequest request, User user) {
+    //저장기능 구현
+    public NewsFeedResponseDto createNewsFeed(NewsFeedRequestDto request, User user) {
         NewsFeed newsFeed = newsFeedRepository.save(new NewsFeed(request, user));
-        return new NewsFeedResponse(newsFeed);
+        return new NewsFeedResponseDto(newsFeed);
     }
 //    //단일 게시글 조회
-//    public NewsFeedResponse findById(Long newsFeedId) {
+//    public NewsFeedResponseDto findById(Long newsFeedId) {
 //        NewsFeed newsFeed = findNewsFeedById(newsFeedId);
 //
-//        return new NewsFeedResponse(newsFeed.getId(), newsFeed.getContents());
+//        return new NewsFeedResponseDto(newsFeed.getId(), newsFeed.getContents());
 //    }
 //
 //    private NewsFeed findNewsFeedById(Long newsFeedId) {
@@ -37,11 +38,11 @@ public class NewsFeedService {
 //        newsFeedRepository.deleteById(newsFeedId);
 //    }
 //
-//    public List<NewsFeedResponse> findAll() {
+//    public List<NewsFeedResponseDto> findAll() {
 //        List<NewsFeed> newsFeeds = newsFeedRepository.findAll();
-//        List<NewsFeedResponse> newsFeedResponseList = new ArrayList<>();
+//        List<NewsFeedResponseDto> newsFeedResponseList = new ArrayList<>();
 //        for (NewsFeed newsFeed : newsFeeds) {
-//            NewsFeedResponse response = new NewsFeedResponse(newsFeed.getId(), newsFeed.getContents());
+//            NewsFeedResponseDto response = new NewsFeedResponseDto(newsFeed.getId(), newsFeed.getContents());
 //            newsFeedResponseList.add(response);
 //        }
 //        return newsFeedResponseList;

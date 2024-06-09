@@ -1,6 +1,6 @@
 package com.sparta.newsfeed.entity;
 
-import com.sparta.newsfeed.dto.NewsFeedCreateRequest;
+import com.sparta.newsfeed.dto.NewsFeedRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,8 +16,8 @@ public class NewsFeed extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn (name = "userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(columnDefinition = "TEXT")
@@ -25,7 +25,12 @@ public class NewsFeed extends TimeStamped {
 
 
 
-    public NewsFeed(NewsFeedCreateRequest request, User user) {
-        super();
+    public NewsFeed(NewsFeedRequestDto request, User user) {
+        this.user = user;
+        this.contents = request.getContents();
+    }
+
+    public void update(NewsFeedRequestDto newsFeedRequestDto) {
+        this.contents = newsFeedRequestDto.getContents();
     }
 }

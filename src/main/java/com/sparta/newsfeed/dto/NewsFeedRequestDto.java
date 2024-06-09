@@ -5,8 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NewsFeedCreateRequest {
+public class NewsFeedRequestDto {
     private String contents;
-    private String username;
-
 }
