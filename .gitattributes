@@ -1,0 +1,11 @@
+# 자동 줄 끝 변환 설정
+* text=auto
+
+# 특정 파일 형식에 대해 LF로 변환 설정
+*.java text eol=lf
+*.yml text eol=lf
+*.gradle text eol=lf
+*.sh text eol=lf
+
+# 윈도우 실행 파일은 CRLF로 설정
+*.bat text eol=crlf
