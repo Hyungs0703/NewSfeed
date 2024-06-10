@@ -37,11 +37,12 @@ public class UserController {
     public Optional<User> getUserInfo(LoginRequestDto requestDto) {
         return userService.getUserInfo(requestDto);
     }
+
     //회원 소개 수정
     @PutMapping("/user-info")
     @ResponseBody
-    public ResponseEntity<String> updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto) {
-       return userService.updateUserInfo(requestDto);
+    public ResponseEntity<Optional<User>> updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+       return userService.updateUserInfo(requestDto, userDetails);
     }
 
     //회원탈퇴
@@ -50,10 +51,11 @@ public class UserController {
     public void withdrawal(@RequestBody WithdrawalRequestDto requestDto) {
         userService.withdrawal(requestDto);
     }
-//    @PostMapping("/logout")
-//    @ResponseBody
-//    public void logout(@RequestBody LoginRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        userService.logout(requestDto, userDetails);
-//    }
+    //로그아웃
+    @DeleteMapping("/logout")
+    @ResponseBody
+    public void logout(@RequestBody LoginRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(requestDto, userDetails);
+    }
 
 }

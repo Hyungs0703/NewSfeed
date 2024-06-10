@@ -70,52 +70,28 @@ public class UserService {
 
     //회원정보수정
     @Transactional
-    public ResponseEntity<String> updateUserInfo(UpdateInfoRequestDto requestDto) {
-        User user = userRepository.findByUsername(requestDto.getUsername()).get();
-
-        String username = requestDto.getUsername();
-        Optional<User> checkUsername = Optional.ofNullable(userRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("아이디는 공백일 수 없습니다..")));
-
+    public ResponseEntity<Optional<User>> updateUserInfo(UpdateInfoRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
         String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkpassword = Optional.ofNullable(userRepository.findByPassword(password).orElseThrow(() ->
-                new IllegalArgumentException("비밀번호는 공백일 수 없습니다..")));
-
         String introduce = requestDto.getIntroduce();
-        if (checkUsername.isPresent() || checkpassword.isPresent()) {
+        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
+        Optional<User> checkPassword = userRepository.findByPassword(password);
+        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
             user.setIntroduce(introduce);
-        } else {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
-
         userRepository.save(user);
-        return ResponseEntity.ok(user.getIntroduce());
+        return ResponseEntity.ok().body(checkUsername);
     }
 
     @Transactional
     public void withdrawal(WithdrawalRequestDto requestDto) {
-        User user = userRepository.findByUsername(requestDto.getUsername()).get();
-        String username = requestDto.getUsername();
-        Optional<User> checkUsername = Optional.ofNullable(userRepository.findByUsername(username).orElseThrow(() ->
-                new IllegalArgumentException("아이디는 공백일 수 없습니다..")));
 
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkpassword = Optional.ofNullable(userRepository.findByPassword(password).orElseThrow(() ->
-                new IllegalArgumentException("비밀번호는 공백일 수 없습니다..")));
+    }
 
-        if (checkUsername.isPresent() || checkpassword.isPresent()) {
-            user.setToken(BLACKLIST_TOKEN);
-            user.setRole(UserRoleEnum.WITHDRAWAL);
-        } else {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다.");
-        }
-        userRepository.save(user);
+    public void logout(LoginRequestDto requestDto, UserDetailsImpl userDetails) {
+
     }
 
 
-//    public void logout(LoginRequestDto requestDto, UserDetailsImpl userDetails) {
-//        String token = userDetails.get();
-//        token = "null";
 
-//    }
 }
