@@ -29,7 +29,6 @@ public class UserController {
         userService.signup(requestDto);
         return ResponseEntity.ok().build();
     }
-
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
     @ResponseBody

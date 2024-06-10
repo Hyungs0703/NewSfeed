@@ -42,7 +42,7 @@ public class NewsFeedController {
     }
 
     @PutMapping("/newsfeeds/{id}")
-    public NewsFeedResponseDto updateNewsFeed (@PathVariable Long id, NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+    public NewsFeedResponseDto updateNewsFeed (@PathVariable Long id, @RequestBody  NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
         return newsFeedService.updateNewsFeed(id, requestDto, userDetails);
     }
 
