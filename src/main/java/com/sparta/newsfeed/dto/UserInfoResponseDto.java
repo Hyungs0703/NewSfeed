@@ -8,10 +8,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserInfoDto {
+public class UserInfoResponseDto {
     String username;
     String name;
     String email;
     String introduce;
-    boolean role;
 }

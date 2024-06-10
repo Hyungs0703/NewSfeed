@@ -1,9 +1,6 @@
 package com.sparta.newsfeed.controller;
 
-import com.sparta.newsfeed.dto.LoginRequestDto;
-import com.sparta.newsfeed.dto.SignupRequestDto;
-import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
-import com.sparta.newsfeed.dto.WithdrawalRequestDto;
+import com.sparta.newsfeed.dto.*;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserService;
@@ -34,28 +31,28 @@ public class UserController {
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
     @ResponseBody
-    public Optional<User> getUserInfo(LoginRequestDto requestDto) {
-        return userService.getUserInfo(requestDto);
+    public Optional<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getUserInfo(userDetails);
     }
 
     //회원 소개 수정
     @PutMapping("/user-info")
     @ResponseBody
-    public ResponseEntity<Optional<User>> updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public UserInfoResponseDto updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
        return userService.updateUserInfo(requestDto, userDetails);
     }
 
     //회원탈퇴
     @PutMapping("/withdrawal")
     @ResponseBody
-    public void withdrawal(@RequestBody WithdrawalRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public void withdrawal(@RequestBody JoinRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.withdrawal(requestDto, userDetails);
     }
 
     //로그아웃
     @DeleteMapping("/logout")
     @ResponseBody
-    public void logout(@RequestBody LoginRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public void logout(@RequestBody JoinRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         userService.logout(requestDto, userDetails);
     }
 

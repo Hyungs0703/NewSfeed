@@ -1,17 +1,14 @@
 package com.sparta.newsfeed.service;
 
-import com.sparta.newsfeed.dto.LoginRequestDto;
+import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
-import com.sparta.newsfeed.dto.WithdrawalRequestDto;
+import com.sparta.newsfeed.dto.UserInfoResponseDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.UserDetailsImpl;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +24,7 @@ public class UserService {
     // 회원탈퇴 토큰
     private final String BLACKLIST_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
-    //회원가입
+    // 회원가입
     public void signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
@@ -59,55 +56,83 @@ public class UserService {
 
         // 사용자 등록
         User user = new User(username, password, name, email, introduce, role, refreshToken);
-
-
         userRepository.save(user);
     }
 
-    //회원 정보
-    public Optional<User> getUserInfo(LoginRequestDto requestDto) {
-        return userRepository.findByUsername(requestDto.getUsername());
+    // 회원 정보
+    public Optional<User> getUserInfo(UserDetailsImpl userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername());
     }
 
-    //회원정보수정
-    @Transactional
-    public ResponseEntity<Optional<User>> updateUserInfo(UpdateInfoRequestDto requestDto, UserDetailsImpl userDetails) {
+    // 회원 프로필 수정
+    public UserInfoResponseDto updateUserInfo(UpdateInfoRequestDto requestDto, UserDetailsImpl userDetails) {
+        validateUserDetailsAndRequest(userDetails, requestDto);
+
         User user = userDetails.getUser();
-        String password = passwordEncoder.encode(requestDto.getPassword());
         String introduce = requestDto.getIntroduce();
-        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
-        Optional<User> checkPassword = userRepository.findByPassword(password);
-        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
+        String rawPassword = requestDto.getPassword();
+        String encodedPassword = user.getPassword();
+
+        // 해당 비밀번호가 맞는지 조회
+        if (passwordEncoder.matches(rawPassword, encodedPassword)) {
             user.setIntroduce(introduce);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
-        userRepository.save(user);
-        return ResponseEntity.ok().body(checkUsername);
+
+        return new UserInfoResponseDto(
+                userDetails.getUsername(),
+                user.getName(),
+                userDetails.getEmail(),
+                user.getIntroduce());
     }
 
-    //회원탈퇴
-    public void withdrawal(WithdrawalRequestDto requestDto, UserDetailsImpl userDetails) {
-        User user = userDetails.getUser();
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
-        Optional<User> checkPassword = userRepository.findByPassword(password);
+    // 회원탈퇴
+    public void withdrawal(JoinRequestDto requestDto, UserDetailsImpl userDetails) {
+        findUser(requestDto, userDetails);
 
-        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
-            user.setToken(BLACKLIST_TOKEN);
-            user.setRole(UserRoleEnum.WITHDRAWAL);
-        }
+        User user = userDetails.getUser();
+        // 사용자 탈퇴 처리
+        user.setToken(BLACKLIST_TOKEN);
+        user.setRole(UserRoleEnum.WITHDRAWAL);
         userRepository.save(user);
     }
 
+    // 로그아웃
+    public void logout(JoinRequestDto requestDto, UserDetailsImpl userDetails) {
+        findUser(requestDto, userDetails);
 
-    public void logout(LoginRequestDto requestDto, UserDetailsImpl userDetails) {
         User user = userDetails.getUser();
-        String password = passwordEncoder.encode(requestDto.getPassword());
-        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
-        Optional<User> checkPassword = userRepository.findByPassword(password);
-
-        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
-            user.setToken("");
-        }
+        // 사용자 로그아웃 처리
+        user.setToken("");
         userRepository.save(user);
+    }
+
+    private void validateUserDetailsAndRequest(UserDetailsImpl userDetails, Object requestDto) {
+        if (userDetails == null || requestDto == null) {
+            throw new IllegalArgumentException("해당 데이터는 존재하지 않습니다.");
+        }
+
+        User user = userDetails.getUser();
+        if (user == null) {
+            throw new IllegalStateException("해당 유저는 존재하지 않습니다.");
+        }
+    }
+
+    private void findUser(JoinRequestDto requestDto, UserDetailsImpl userDetails) {
+        validateUserDetailsAndRequest(userDetails, requestDto);
+
+        User user = userDetails.getUser();
+        // 요청된 사용자 이름과 현재 로그인한 사용자가 일치하는지 확인
+        if (!user.getUsername().equals(requestDto.getUsername())) {
+            throw new IllegalArgumentException("해당 유저의 이름이 일치하지 않습니다.");
+        }
+
+        // 비밀번호 확인
+        String rawPassword = requestDto.getPassword();
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

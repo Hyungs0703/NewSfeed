@@ -1,7 +1,7 @@
 package com.sparta.newsfeed.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.newsfeed.dto.LoginRequestDto;
+import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), LoginRequestDto.class);
+            JoinRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(), JoinRequestDto.class);
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
