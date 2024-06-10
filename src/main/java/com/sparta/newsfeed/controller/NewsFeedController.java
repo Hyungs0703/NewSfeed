@@ -46,7 +46,6 @@ public class NewsFeedController {
         return newsFeedService.updateNewsFeed(id, requestDto, userDetails);
     }
 
-
     //게시물 삭제
     @DeleteMapping("/newsfeeds/{id}")
     public ResponseEntity<String> deleteNewsfeed(@PathVariable Long id) {
