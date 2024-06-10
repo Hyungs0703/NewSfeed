@@ -48,9 +48,10 @@ public class UserController {
     //회원탈퇴
     @PutMapping("/withdrawal")
     @ResponseBody
-    public void withdrawal(@RequestBody WithdrawalRequestDto requestDto) {
-        userService.withdrawal(requestDto);
+    public void withdrawal(@RequestBody WithdrawalRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.withdrawal(requestDto, userDetails);
     }
+
     //로그아웃
     @DeleteMapping("/logout")
     @ResponseBody

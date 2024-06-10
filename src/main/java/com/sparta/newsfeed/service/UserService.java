@@ -8,6 +8,7 @@ import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.UserDetailsImpl;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -83,15 +84,30 @@ public class UserService {
         return ResponseEntity.ok().body(checkUsername);
     }
 
-    @Transactional
-    public void withdrawal(WithdrawalRequestDto requestDto) {
+    //회원탈퇴
+    public void withdrawal(WithdrawalRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
+        Optional<User> checkPassword = userRepository.findByPassword(password);
 
+        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
+            user.setToken(BLACKLIST_TOKEN);
+            user.setRole(UserRoleEnum.WITHDRAWAL);
+        }
+        userRepository.save(user);
     }
+
 
     public void logout(LoginRequestDto requestDto, UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+        String password = passwordEncoder.encode(requestDto.getPassword());
+        Optional<User> checkUsername = userRepository.findByUsername(requestDto.getUsername());
+        Optional<User> checkPassword = userRepository.findByPassword(password);
 
+        if (checkUsername.isPresent()|| checkPassword.isPresent()) {
+            user.setToken("");
+        }
+        userRepository.save(user);
     }
-
-
-
 }
