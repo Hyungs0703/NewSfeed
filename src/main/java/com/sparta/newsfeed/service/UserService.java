@@ -112,7 +112,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //회원탈퇴
-    public void logout(UserDetailsImpl userDetails) {
-    }
+
+//    public void logout(LoginRequestDto requestDto, UserDetailsImpl userDetails) {
+//        String token = userDetails.get();
+//        token = "null";
+
+//    }
 }

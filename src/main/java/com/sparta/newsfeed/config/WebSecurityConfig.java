@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.config;
 
+import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.JwtAuthenticationFilter;
 import com.sparta.newsfeed.security.JwtAuthorizationFilter;
 import com.sparta.newsfeed.security.UserDetailsServiceImpl;
@@ -27,7 +28,7 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
-
+    private final UserRepository userRepository;
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -40,7 +41,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, userRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         return filter;
     }

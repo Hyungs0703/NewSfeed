@@ -2,6 +2,7 @@ package com.sparta.newsfeed.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeed.dto.LoginRequestDto;
+import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.util.JwtUtil;
@@ -15,15 +16,17 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
-
+        this.userRepository = userRepository;
         setFilterProcessesUrl("/api/user/login");
     }
 
@@ -52,6 +55,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = jwtUtil.createToken(username, role);
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username).orElseThrow(() ->
+                new IllegalArgumentException("해당 사용자는 존재하지 않습니다")));
+
+        user.get().setToken(token);
+        userRepository.save(user.get());
     }
 
     @Override

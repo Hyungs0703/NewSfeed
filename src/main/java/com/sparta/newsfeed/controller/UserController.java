@@ -50,10 +50,10 @@ public class UserController {
     public void withdrawal(@RequestBody WithdrawalRequestDto requestDto) {
         userService.withdrawal(requestDto);
     }
-    @PostMapping("/logout")
-    @ResponseBody
-    public void logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.logout(userDetails);
-    }
+//    @PostMapping("/logout")
+//    @ResponseBody
+//    public void logout(@RequestBody LoginRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        userService.logout(requestDto, userDetails);
+//    }
 
 }
