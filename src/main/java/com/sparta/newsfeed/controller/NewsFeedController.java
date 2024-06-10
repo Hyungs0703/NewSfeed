@@ -35,8 +35,8 @@ public class NewsFeedController {
 
     //개별 게시물 조회 : 누구든 조회 가능
     @GetMapping("/newsfeeds/{id}")
-    public ResponseEntity<NewsFeedResponseDto> getNewsfeed(@PathVariable(name = "newsFeedId") Long newsFeedId) {
-        NewsFeedResponseDto response = newsFeedService.getNewsfeed(newsFeedId);
+    public ResponseEntity<NewsFeedResponseDto> getNewsfeed(@PathVariable Long id) {
+        NewsFeedResponseDto response = newsFeedService.getNewsfeed(id);
         return ResponseEntity.ok(response);
     }
 
@@ -48,8 +48,8 @@ public class NewsFeedController {
 
     //게시물 삭제
     @DeleteMapping("/newsfeeds/{id}")
-    public ResponseEntity<String> deleteNewsfeed(@PathVariable(name = "newsFeedId") Long newsFeedId) {
-        newsFeedService.deleteNewsfeed(newsFeedId);
+    public ResponseEntity<String> deleteNewsfeed(@PathVariable Long id) {
+        newsFeedService.deleteNewsfeed(id);
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
