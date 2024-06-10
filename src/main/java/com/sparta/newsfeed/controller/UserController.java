@@ -1,9 +1,7 @@
 package com.sparta.newsfeed.controller;
 
-import com.sparta.newsfeed.dto.LoginRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
-import com.sparta.newsfeed.dto.WithdrawalRequestDto;
 import com.sparta.newsfeed.dto.*;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.security.UserDetailsImpl;

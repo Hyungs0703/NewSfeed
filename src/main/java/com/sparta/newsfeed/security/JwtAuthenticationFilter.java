@@ -1,6 +1,7 @@
 package com.sparta.newsfeed.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
