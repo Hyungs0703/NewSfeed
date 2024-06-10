@@ -8,6 +8,7 @@ import com.sparta.newsfeed.repository.NewsFeedRepository;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -83,8 +85,28 @@ public class NewsFeedService {
 
 
     //삭제
-    public void deleteNewsfeed(Long newsFeedId) {
-        newsFeedRepository.deleteById(newsFeedId);
+    public ResponseEntity<String> deleteNewsFeed(Long id, UserDetailsImpl userDetails) {
+
+        NewsFeed newsFeed = findById(id);
+        if (!newsFeed.getUser().getId().equals(userDetails.getUser().getId())) {
+            throw new IllegalArgumentException("작성자 외 다른 사용자는 삭제할 수 없습니다.");
+        }
+
+        newsFeedRepository.delete(newsFeed);
+        return ResponseEntity.ok("게시물이 삭제되었습니다.");
     }
 
+    public NewsFeed findById(Long id) {
+        return newsFeedRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("선택한 게시물이 존재하지 않습니다.")
+                );
+    }
+
+    // 뉴스피드 조회 기능 : 뉴스피드가 없을 경우 메세지 표시
+    public List<NewsFeedResponseDto> getAllNewsFeeds() {
+        List<NewsFeed> newsFeeds = newsFeedRepository.findAllByOrderByCreatedAtDesc();
+        return newsFeeds.stream()
+                .map(NewsFeedResponseDto::new)
+                .collect(Collectors.toList());
+    }
 }

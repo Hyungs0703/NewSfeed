@@ -49,9 +49,17 @@ public class NewsFeedController {
 
     //게시물 삭제
     @DeleteMapping("/newsfeeds/{id}")
-    public ResponseEntity<String> deleteNewsfeed(@PathVariable Long id) {
-        newsFeedService.deleteNewsfeed(id);
-        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+    public ResponseEntity<String> deleteNewsFeed(@PathVariable Long id,
+                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return newsFeedService.deleteNewsFeed(id,userDetails);
+    }
+
+    @GetMapping("/newsfeeds/find")
+    public ResponseEntity<?> getAllNewsFeeds() {
+        List<NewsFeedResponseDto> newsFeeds = newsFeedService.getAllNewsFeeds();
+        if (newsFeeds.isEmpty()) {
+            return ResponseEntity.ok("먼저 작성하여 소식을 알려보세요!");
+        } else return ResponseEntity.ok(newsFeeds);
     }
 
 }
