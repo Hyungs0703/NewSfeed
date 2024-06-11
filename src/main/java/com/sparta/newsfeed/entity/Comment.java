@@ -1,33 +1,36 @@
 package com.sparta.newsfeed.entity;
 
-import com.sparta.newsfeed.dto.NewsFeedRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Optional;
+
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class NewsFeed extends TimeStamped {
+@Table(name = "comment")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "newsfeed_id", nullable = false)
+    private NewsFeed newsFeed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+    private String comment;
 
-
-
-    public NewsFeed(NewsFeedRequestDto request, User user) {
+    public Comment(NewsFeed newsFeed, User user, String comment) {
+        this.newsFeed = newsFeed;
         this.user = user;
-        this.contents = request.getContents();
+        this.comment = comment;
     }
-
 }

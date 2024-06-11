@@ -8,6 +8,5 @@ import java.util.List;
 public interface NewsFeedRepository extends JpaRepository<NewsFeed, Long> {
     List<NewsFeed> findAllByOrderByCreatedAtDesc();
 
-
 }
 
