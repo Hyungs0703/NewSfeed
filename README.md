@@ -32,16 +32,12 @@
  -작성 구현
 ## 1. User 기능
 -회원가입
-
- -username, password, name, email, introduce 를 입력하여 회원 가입
+    -username, password, name, email, introduce 를 입력하여 회원 가입
  
 -로그인
-
- -username, password 를 입력하여 로그인
- 
- -jwt access 토큰 발행
- 
--로그아웃
+    -username, password 를 입력하여 로그인
+    -jwt access 토큰 발행
+    -로그아웃
 
  -username, password 를 입력하여 로그인 <- 수정 예정
  
