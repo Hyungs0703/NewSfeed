@@ -33,7 +33,7 @@
 ### 회원탈퇴
    -  username, password 를 입력하여 회원탈퇴 및 재가입 불가
    -  jwt access 토큰 필요
-## 2. NewsFeed 기능
+## NewsFeed 기능
 ### 작성
    -  로그인한 사용자가 작성이 가능하며 Access 토큰 검증
 ### 조회
@@ -43,10 +43,9 @@
   -  로그인한 사용자가 작성한 newsfeed만 수정이 가능하며 Access 토큰 검증
 ### 삭제
   -  로그인한 사용자가 작성한 newsfeed만 수정이 가능하며 Access 토큰 검증
-## 3. Comment 기능
--작성
-
- -로그인한 사용자가 작성되있는 newsfeed의 id를 request body 형식으로 작성하여 댓글 작성이 가능하다.
+## Comment 기능
+### 작성
+ -  로그인한 사용자가 작성되있는 newsfeed의 id를 request body 형식으로 작성하여 댓글 작성이 가능하다.
 
 ##  Wireframe
 ![와이어프레임](https://github.com/Hyungs0703/NewSfeed/assets/165638682/8c45c1f2-383c-4555-a976-75d2119385f2)
