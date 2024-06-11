@@ -25,9 +25,9 @@
 -NewsFeed
  -작성, 조회, 수정, 삭제 구현
 
-- Comment
-- 
-  -작성 구현
+-Comment
+ 
+ -작성 구현
 ## 1. User 기능
 -회원가입
 
