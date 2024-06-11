@@ -1,7 +1,7 @@
 # Newsfeed Project
--Spring Boot의 Spring security를 사용하여 Jwt토큰 인증, 인가를 기반으로 회원가입, 로그인, 로그아웃, 회원탈퇴 로직
--게시글 작성, 조회, 수정, 삭제 CRUD
--댓글 작성
+-Spring Boot의 Spring security를 사용하여 Jwt토큰 인증, 인가를 기반으로 회원가입, 로그인, 로그아웃, 회원탈퇴 로직.
+-게시글 작성, 조회, 수정, 삭제 CRUD.
+-댓글 작성.
 -기능을 가진 서버는 IntelliJ 프로그램과 Java언어로 사용하여 개발하였습니다.
 -백엔드 데이버 베이스는 MySQL을 사용합니다.
 
