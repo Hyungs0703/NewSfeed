@@ -27,31 +27,50 @@
 
 - Comment
   -작성 구현
-
 ## 1. User 기능
 -회원가입
+
  -username, password, name, email, introduce 를 입력하여 회원 가입
+ 
 -로그인
+
  -username, password 를 입력하여 로그인
+ 
  -jwt access 토큰 발행
+ 
 -로그아웃
+
  -username, password 를 입력하여 로그인 <- 수정 예정
+ 
  -jwt access 토큰 필요
+ 
 -회원탈퇴
+
  -username, password 를 입력하여 회원탈퇴 및 재가입 불가
+ 
  -jwt access 토큰 필요
 ## 2. NewsFeed 기능
 -작성
+
  -로그인한 사용자가 작성이 가능하며 Access 토큰 검증
+ 
 -조회
+
  -로그인하지 않은 모든 사용자가 조회가능하다
+ 
  -선택조회도 가능하다. 
+ 
 -수정
+
  -로그인한 사용자가 작성한 newsfeed만 수정이 가능하며 Access 토큰 검증
+ 
 -삭제
+
  -로그인한 사용자가 작성한 newsfeed만 수정이 가능하며 Access 토큰 검증
 ## 3. Comment 기능
+
 -작성
+
  -로그인한 사용자가 작성되있는 newsfeed의 id를 request body 형식으로 작성하여 댓글 작성이 가능하다.
 
 ##  Wireframe
