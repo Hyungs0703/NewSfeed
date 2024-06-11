@@ -16,17 +16,13 @@
  -  허건  팀원 : 탈퇴 기능, 프로필 수정 조회 기능(CRUD)
    
 
--User
+# User 
+ -  회원가입, 회원탈퇴, 프로필조회, 프로필수정 API 구현
 
- -회원가입, 회원탈퇴, 프로필조회, 프로필수정 API 구현
-
--NewsFeed
-
- -작성, 조회, 수정, 삭제 구현
-
--Comment
- 
- -작성 구현
+# NewsFeed
+ -  작성, 조회, 수정, 삭제 구현
+# Comment
+ -  작성 구현
 ## 1. User 기능
 -회원가입
     -username, password, name, email, introduce 를 입력하여 회원 가입
