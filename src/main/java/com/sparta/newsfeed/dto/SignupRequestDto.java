@@ -1,11 +1,16 @@
 package com.sparta.newsfeed.dto;
 
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.util.MultiValueMap;
+
+import java.security.Principal;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class SignupRequestDto {
     private String username;
     private String password;
@@ -16,4 +21,5 @@ public class SignupRequestDto {
     private boolean isRole = false;
     private String role = "";
     private String refreshToken = "";
+
 }

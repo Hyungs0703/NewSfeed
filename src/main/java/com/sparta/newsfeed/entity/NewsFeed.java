@@ -30,4 +30,7 @@ public class NewsFeed extends TimeStamped {
         this.contents = request.getContents();
     }
 
+    public void update(String contents) {
+        this.contents = contents;
+    }
 }

@@ -56,7 +56,7 @@ public class NewsFeedService {
     }
 
     @Transactional
-    public NewsFeedResponseDto updateNewsFeed(Long newsFeedId, NewsFeedRequestDto requestDto, UserDetails userDetails) {
+    public NewsFeedResponseDto updateNewsFeed(Long newsFeedId, NewsFeedRequestDto requestDto, UserDetailsImpl userDetails) {
 
         String username = userDetails.getUsername();
 

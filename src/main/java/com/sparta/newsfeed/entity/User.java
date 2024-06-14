@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.entity;
 
+import com.sparta.newsfeed.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -47,6 +48,9 @@ public class User extends TimeStamped {
         this.lastLogin = LocalDateTime.now();
     }
 
+    public User(SignupRequestDto signupRequestDto) {
+        super();
+    }
 }
 
 
