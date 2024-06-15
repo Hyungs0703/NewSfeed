@@ -1,9 +1,11 @@
 package com.sparta.newsfeed.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeed.config.WebSecurityConfig;
 import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
+import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
 import com.sparta.newsfeed.mvc.MockSpringSecurityFilter;
@@ -27,10 +29,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.security.Principal;
 import java.util.Optional;
 
-import static org.awaitility.Awaitility.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,10 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 )
         }
 )
-
-
- class UserControllerTest {
-    @Autowired
+class UserControllerTest {
     private MockMvc mvc;
 
     private Principal mockPrincipal;
@@ -114,27 +111,78 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andDo(print());
     }
 
-//    @Test
-//    @DisplayName("로그인")
-//    void test2() throws Exception {
-//        this.mockUserSetup();
-//        String userId = "sollertia4351";
-//        String password = "robbie1234";
-//
-//        JoinRequestDto login = new JoinRequestDto(userId, password);
-//
-//        String loginInfo = objectMapper.writeValueAsString(login);
-//
-//        // when - then
-//        mvc.perform(post("/api/user/login")
-//                        .content(loginInfo)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON)
-//                        .principal(mockPrincipal)
-//                )
-//                .andExpect(status().isOk())
-//                .andDo(print());
-//    }
-//
+    @Test
+    @DisplayName("회원관련 정보받기")
+    void test2() throws Exception {
+        this.mockUserSetup();
+        Optional<User> user =userRepository.findByUsername(mockPrincipal.getName());
 
+        // when - then
+        mvc.perform(get("/api/user/user-info")
+                        .content(String.valueOf(user))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .principal(mockPrincipal)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("회원 정보 수정하기")
+    void test3() throws Exception {
+        this.mockUserSetup();
+        String password = "1234";
+        String update = "수정합니다";
+        UpdateInfoRequestDto updateInfoRequestDto = new UpdateInfoRequestDto(password, update);
+
+        String updateInfo = objectMapper.writeValueAsString(updateInfoRequestDto);
+
+        mvc.perform(put("/api/user/user-info")
+                        .content(updateInfo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .principal(mockPrincipal)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원탈퇴")
+    void test4() throws Exception{
+        this.mockUserSetup();
+        String username = "test1234";
+        String password = "1234";
+        JoinRequestDto user = new JoinRequestDto(username, password);
+
+        String userIfo = objectMapper.writeValueAsString(user);
+
+        mvc.perform(put("/api/user/withdrawal")
+                        .content(userIfo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .principal(mockPrincipal)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+    @Test
+    @DisplayName("로그아웃")
+    void test5() throws Exception{
+        this.mockUserSetup();
+        String username = "test1234";
+        String password = "1234";
+        JoinRequestDto user = new JoinRequestDto(username, password);
+
+        String logoutInfo = objectMapper.writeValueAsString(user);
+
+        mvc.perform(delete("/api/user/logout")
+                        .content(logoutInfo)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .principal(mockPrincipal)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
 }

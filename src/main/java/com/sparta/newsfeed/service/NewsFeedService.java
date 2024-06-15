@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewsFeedService {
     private final NewsFeedRepository newsFeedRepository;
-    private final UserRepository userRepository;
 
     //저장기능 구현
-    public NewsFeedResponseDto createNewsFeed(NewsFeedRequestDto request, User user) {
+    public NewsFeedResponseDto createNewsFeed( NewsFeedRequestDto request, User user) {
         NewsFeed newsFeed = newsFeedRepository.save(new NewsFeed(request, user));
         return new NewsFeedResponseDto(newsFeed);
     }
