@@ -1,11 +1,12 @@
-package com.sparta.newsfeed.mvc;
+package com.sparta.newsfeed.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.newsfeed.config.WebSecurityConfig;
-import com.sparta.newsfeed.controller.UserController;
+import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.mvc.MockSpringSecurityFilter;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserService;
@@ -24,8 +25,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.security.Principal;
-import java.util.Objects;
+import java.util.Optional;
 
+import static org.awaitility.Awaitility.given;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,7 +46,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 
 
- class UserMvcTest {
+ class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
@@ -86,7 +88,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     @Test
     @DisplayName("회원 가입 요청 처리")
     void test1() throws Exception {
-        this.mockUserSetup();
         // given
         String username = "test1234";
         String password = "1234";
@@ -113,14 +114,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 .andDo(print());
     }
 
-    @Test
-    @DisplayName("회원 정보요청")
-    void test2() throws Exception {
-
-
-
-    }
-
-
+//    @Test
+//    @DisplayName("로그인")
+//    void test2() throws Exception {
+//        this.mockUserSetup();
+//        String userId = "sollertia4351";
+//        String password = "robbie1234";
+//
+//        JoinRequestDto login = new JoinRequestDto(userId, password);
+//
+//        String loginInfo = objectMapper.writeValueAsString(login);
+//
+//        // when - then
+//        mvc.perform(post("/api/user/login")
+//                        .content(loginInfo)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .accept(MediaType.APPLICATION_JSON)
+//                        .principal(mockPrincipal)
+//                )
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//    }
+//
 
 }
