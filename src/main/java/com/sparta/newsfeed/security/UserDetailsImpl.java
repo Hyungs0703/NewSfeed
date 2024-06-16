@@ -30,6 +30,10 @@ public class UserDetailsImpl implements UserDetails {
     public String getUsername() {
         return user.getUsername();
     }
+
+    public String getName() {
+        return user.getName();
+    }
     public String getEmail() {
         return user.getEmail();
     }
@@ -71,4 +75,6 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

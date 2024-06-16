@@ -1,22 +1,20 @@
 package com.sparta.newsfeed.controller;
 
+import com.sparta.newsfeed.dto.JoinRequestDto;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.dto.UpdateInfoRequestDto;
-import com.sparta.newsfeed.dto.*;
-import com.sparta.newsfeed.entity.User;
+import com.sparta.newsfeed.dto.UserInfoResponseDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
@@ -25,36 +23,36 @@ public class UserController {
 
     //회원가입
     @PostMapping("/signup")
-    public ResponseEntity<User> signup(SignupRequestDto requestDto) {
+    public ResponseEntity<?> signup(@RequestBody SignupRequestDto requestDto) {
         userService.signup(requestDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원 가입이 완료되었습니다.");
     }
+
     // 회원 관련 정보 받기
     @GetMapping("/user-info")
-    @ResponseBody
-    public Optional<User> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getUserInfo(userDetails);
+    public ResponseEntity<?> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserInfoResponseDto userInfoResponseDto = userService.getUserInfo(userDetails);
+        return ResponseEntity.status(HttpStatus.FOUND).body(userInfoResponseDto);
     }
 
     //회원 소개 수정
     @PutMapping("/user-info")
-    @ResponseBody
-    public UserInfoResponseDto updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-       return userService.updateUserInfo(requestDto, userDetails);
-    }
-
-    //회원탈퇴
-    @PutMapping("/withdrawal")
-    @ResponseBody
-    public void withdrawal(@RequestBody JoinRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.withdrawal(requestDto, userDetails);
+    public ResponseEntity<?> updateUserInfo(@RequestBody UpdateInfoRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UserInfoResponseDto userInfoResponseDto = userService.updateUserInfo(requestDto,userDetails);
+        return ResponseEntity.status(HttpStatus.UPGRADE_REQUIRED).body(userInfoResponseDto);
     }
 
     //로그아웃
     @DeleteMapping("/logout")
-    @ResponseBody
-    public void logout(@RequestBody JoinRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        userService.logout(requestDto, userDetails);
+    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.logout(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body("로그 아웃 되었습니다.");
     }
 
+    //회원탈퇴
+    @PutMapping("/withdrawal")
+    public ResponseEntity<?> withdrawal(@RequestBody JoinRequestDto requestDto,@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.withdrawal(requestDto, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body("회원 탈퇴가 완료 되었습니다.");
+    }
 }

@@ -22,7 +22,7 @@ public class UserService {
     private final String BLACKLIST_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원가입
-    public void signup(SignupRequestDto requestDto) {
+    public UserInfoResponseDto signup(SignupRequestDto requestDto) {
         String username = requestDto.getUsername();
         String password = passwordEncoder.encode(requestDto.getPassword());
         String name = requestDto.getName();
@@ -56,11 +56,11 @@ public class UserService {
 
 
         userRepository.save(user);
-    }
-
-    // 회원 정보
-    public Optional<User> getUserInfo(UserDetailsImpl userDetails) {
-        return userRepository.findByUsername(userDetails.getUsername());
+        return new UserInfoResponseDto(
+                user.getUsername(),
+                user.getName(),
+                user.getEmail(),
+                user.getIntroduce());
     }
 
     // 회원 프로필 수정
@@ -74,17 +74,21 @@ public class UserService {
 
         // 해당 비밀번호가 맞는지 조회
         if (passwordEncoder.matches(rawPassword, encodedPassword)) {
-            user.setIntroduce(introduce);
+            user.update(introduce);
             userRepository.save(user);
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        return new UserInfoResponseDto(
-                userDetails.getUsername(),
-                user.getName(),
-                userDetails.getEmail(),
-                user.getIntroduce());
+        return getUserInfo(userDetails);
+    }
+
+    // 로그아웃
+    public void logout(UserDetailsImpl userDetails) {
+        User user = userDetails.getUser();
+
+        user.deleteToken("");
+        userRepository.save(user);
     }
 
     // 회원탈퇴
@@ -98,15 +102,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // 로그아웃
-    public void logout(JoinRequestDto requestDto, UserDetailsImpl userDetails) {
-        findUser(requestDto, userDetails);
 
-        User user = userDetails.getUser();
-        // 사용자 로그아웃 처리
-        user.setToken("");
-        userRepository.save(user);
-    }
 
     private void validateUserDetailsAndRequest(UserDetailsImpl userDetails, Object requestDto) {
         if (userDetails == null || requestDto == null) {
@@ -134,4 +130,16 @@ public class UserService {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
+
+    // 회원 정보
+    public UserInfoResponseDto getUserInfo(UserDetailsImpl userDetails) {
+
+        return new UserInfoResponseDto(
+                userDetails.getUsername(),
+                userDetails.getName(),
+                userDetails.getEmail(),
+                userDetails.getIntroduce());
+    }
+
+
 }

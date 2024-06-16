@@ -47,6 +47,13 @@ public class User extends TimeStamped {
         this.lastLogin = LocalDateTime.now();
     }
 
+    public void update(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void deleteToken(String token) {
+        this.token = token;
+    }
 }
 
 
