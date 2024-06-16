@@ -35,7 +35,6 @@ public class User extends TimeStamped {
     private String token;
     private LocalDateTime lastLogin;
 
-
     public User(String username, String password, String name, String email, String introduce, UserRoleEnum role, String token) {
         this.username = username;
         this.password = password;
@@ -46,11 +45,11 @@ public class User extends TimeStamped {
         this.token = token;
         this.lastLogin = LocalDateTime.now();
     }
-
+    //한줄소개 수정
     public void update(String introduce) {
         this.introduce = introduce;
     }
-
+    //로그아웃
     public void deleteToken(String token) {
         this.token = token;
     }

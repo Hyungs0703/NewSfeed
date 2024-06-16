@@ -4,7 +4,9 @@ import com.sparta.newsfeed.dto.NewsFeedRequestDto;
 import com.sparta.newsfeed.dto.NewsFeedResponseDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.NewsFeedService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,44 +23,44 @@ public class NewsFeedController {
 
     //게시물 작성
     @PostMapping("/newsfeeds")
-    @ResponseBody
-    public NewsFeedResponseDto createNewsFeed(@RequestBody NewsFeedRequestDto request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return newsFeedService.createNewsFeed(request, userDetails.getUser());
+    public ResponseEntity<?> createNewsFeed(@RequestBody NewsFeedRequestDto request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        NewsFeedResponseDto newsFeedResponseDto = newsFeedService.createNewsFeed(request, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsFeedResponseDto);
     }
 
     //전체 게시물 조최 : 누구든 조회 가능
     @GetMapping("/newsfeeds")
-    public ResponseEntity<List<NewsFeedResponseDto>> getNewsfeedList(){
-        List<NewsFeedResponseDto> response = newsFeedService.getNewsfeedList();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> getNewsfeedList() {
+        List<NewsFeedResponseDto> newsfeedList = newsFeedService.getNewsfeedList();
+        return ResponseEntity.status(HttpStatus.FOUND).body(newsfeedList);
     }
 
+    //전체 게시물 조회(내림차순)
+    @GetMapping("/newsfeeds/find")
+    public ResponseEntity<?> getAllNewsFeeds() {
+        List<NewsFeedResponseDto> newsfeedList = newsFeedService.getAllNewsFeeds();
+        return ResponseEntity.status(HttpStatus.OK).body(newsfeedList);
+    }
 
     //개별 게시물 조회 : 누구든 조회 가능
-    @GetMapping("/newsfeeds/{id}")
-    public ResponseEntity<NewsFeedResponseDto> getNewsfeed(@PathVariable Long id) {
-        NewsFeedResponseDto response = newsFeedService.getNewsfeed(id);
-        return ResponseEntity.ok(response);
+    @GetMapping("/newsfeeds/{newsfeedId}")
+    public ResponseEntity<?> getNewsfeed(@Valid @PathVariable Long newsfeedId) {
+        NewsFeedResponseDto newsfeed = newsFeedService.getNewsfeed(newsfeedId);
+        return ResponseEntity.status(HttpStatus.OK).body(newsfeed);
     }
-
-    @PutMapping("/newsfeeds/{id}")
-    public NewsFeedResponseDto updateNewsFeed (@PathVariable Long id, @RequestBody  NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        return newsFeedService.updateNewsFeed(id, requestDto, userDetails);
+    //게시물 수정
+    @PutMapping("/newsfeeds/{newsfeedId}")
+    public ResponseEntity<?> updateNewsFeed (@PathVariable Long newsfeedId, @RequestBody NewsFeedRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        NewsFeedResponseDto getNewsFeed = newsFeedService.updateNewsFeed(newsfeedId, requestDto, userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(getNewsFeed);
     }
 
     //게시물 삭제
-    @DeleteMapping("/newsfeeds/{id}")
-    public ResponseEntity<String> deleteNewsFeed(@PathVariable Long id,
-                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return newsFeedService.deleteNewsFeed(id,userDetails);
+    @DeleteMapping("/newsfeeds/{newsfeedId}")
+    public ResponseEntity<?> deleteNewsFeed(@PathVariable Long newsfeedId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        newsFeedService.deleteNewsFeed(newsfeedId,userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body("삭제가 완료되었습니다");
     }
 
-    @GetMapping("/newsfeeds/find")
-    public ResponseEntity<?> getAllNewsFeeds() {
-        List<NewsFeedResponseDto> newsFeeds = newsFeedService.getAllNewsFeeds();
-        if (newsFeeds.isEmpty()) {
-            return ResponseEntity.ok("먼저 작성하여 소식을 알려보세요!");
-        } else return ResponseEntity.ok(newsFeeds);
-    }
 
 }
