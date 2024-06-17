@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         }
 )
 class UserControllerTest {
+
     private MockMvc mvc;
 
     private Principal mockPrincipal;

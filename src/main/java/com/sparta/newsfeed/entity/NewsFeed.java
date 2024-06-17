@@ -31,6 +31,10 @@ public class NewsFeed extends TimeStamped {
         this.contents = request.getContents();
     }
 
+    public NewsFeed(String name, NewsFeedRequestDto newsFeedRequestDto) {
+        super();
+    }
+
     public void update(User user, String content) {
         this.user = user;
         this.contents = content;

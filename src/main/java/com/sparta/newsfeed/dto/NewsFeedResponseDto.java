@@ -12,4 +12,5 @@ public class NewsFeedResponseDto {
     public NewsFeedResponseDto(NewsFeed newsFeed) {
         this.contents=newsFeed.getContents();
     }
+
 }
