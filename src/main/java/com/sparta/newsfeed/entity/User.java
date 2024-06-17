@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.entity;
 
+import com.sparta.newsfeed.dto.SignupRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -45,6 +46,11 @@ public class User extends TimeStamped {
         this.token = token;
         this.lastLogin = LocalDateTime.now();
     }
+
+    public User(SignupRequestDto signupRequestDto) {
+        super();
+    }
+
     //한줄소개 수정
     public void update(String introduce) {
         this.introduce = introduce;

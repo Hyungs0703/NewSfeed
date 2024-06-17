@@ -1,11 +1,14 @@
 package com.sparta.newsfeed.dto;
 
+import com.sparta.newsfeed.entity.User;
 import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class SignupRequestDto {
     private String username;
     private String password;
@@ -16,4 +19,6 @@ public class SignupRequestDto {
     private boolean isRole = false;
     private String role = "";
     private String refreshToken = "";
+
+
 }
